@@ -34,6 +34,21 @@ create table events (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Enable RLS on tables
+alter table jobs enable row level security;
+alter table events enable row level security;
+
+-- Create policies for public read access
+create policy "Allow public read access on jobs"
+  on jobs for select
+  to public
+  using (true);
+
+create policy "Allow public read access on events"
+  on events for select
+  to public
+  using (true);
+
 -- Create a function to search for jobs
 create or replace function match_jobs (
   query_embedding vector(1536),
