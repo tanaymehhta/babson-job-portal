@@ -43,8 +43,11 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json({ jobs, events })
-    } catch (error) {
+    } catch (error: any) {
         console.error('Search API error:', error)
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+        return NextResponse.json({
+            error: 'Internal server error',
+            details: error.message
+        }, { status: 500 })
     }
 }
