@@ -2,7 +2,7 @@
 create extension if not exists vector;
 
 -- Jobs Table
-create table jobs (
+create table if not exists jobs (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   date_posted date not null default current_date,
@@ -20,7 +20,7 @@ create table jobs (
 );
 
 -- Events Table
-create table events (
+create table if not exists events (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   date timestamp not null,
@@ -39,11 +39,14 @@ alter table jobs enable row level security;
 alter table events enable row level security;
 
 -- Create policies for public read access
+-- Drop existing policies first to avoid errors if they exist
+drop policy if exists "Allow public read access on jobs" on jobs;
 create policy "Allow public read access on jobs"
   on jobs for select
   to public
   using (true);
 
+drop policy if exists "Allow public read access on events" on events;
 create policy "Allow public read access on events"
   on events for select
   to public
